@@ -34,20 +34,28 @@ def getVote(parliment, session, vote_num):
     #     my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
 
     root = ET.parse(filename).getroot()
+    votes = []
     for child in root:
         vote = Vote()
-        vote.FirstName = child.find("PersonOfficialFirstName").text()
-        vote.LastName = child.find("PersonOfficialLastName").text()
-        vote.Party = child.find("CaucusShortName").text()
-        vote.Constituency = child.find("ConstituencyName").text()
-        vote.ProvinceTerritory = child.find("ConstituencyProvinceTerritoryName").text()
-        vote.IsVoteYea = child.find("IsVoteYea").text()
-        vote.IsVoteNay = child.find("IsVoteNay").text()
-        vote.IsVotePaired = child.find("IsVotePaired").text()
-        vote_res = child.find("DecisionResultName").text()
+        vote.FirstName = child.find("PersonOfficialFirstName").text
+        vote.LastName = child.find("PersonOfficialLastName").text
+        vote.Party = child.find("CaucusShortName").text
+        vote.Constituency = child.find("ConstituencyName").text
+        vote.ProvinceTerritory = child.find("ConstituencyProvinceTerritoryName").text
+        vote_res = child.find("IsVoteYea").text
+        if vote_res == "true":
+            vote.IsVoteYea = True
+        vote_res = child.find("IsVoteNay").text
+        if vote_res == "true":
+            vote.IsVoteNay = True
+        vote_res = child.find("IsVotePaired").text
+        if vote_res == "true":
+            vote.IsVotePaired = True
+        vote_res = child.find("DecisionResultName").text
         if vote_res == "Agreed To":
             vote.DecisionAgreedTo = True
-        
+        votes.append(vote)
+    print('t')
 
 
 def main():
