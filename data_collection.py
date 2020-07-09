@@ -32,7 +32,10 @@ def getVote(parliment, session, vote_num):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as my_data_file:
         my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
+    parseXML(filename)
 
+
+def parseXML(filename):
     root = ET.parse(filename).getroot()
     votes = []
     for child in root:
