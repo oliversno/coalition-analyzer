@@ -21,17 +21,17 @@ def getVote(parliment, session, vote_num):
     URL = 'https://www.ourcommons.ca/Members/en/votes/' + str(parliment) + '/' \
         + str(session) + '/' + str(vote_num) + '/xml'
     
-    # buffer = BytesIO()
-    # c = pycurl.Curl()
-    # c.setopt(c.URL, URL)
-    # c.setopt(c.WRITEDATA, buffer)
-    # c.perform()
-    # c.close()
+    buffer = BytesIO()
+    c = pycurl.Curl()
+    c.setopt(c.URL, URL)
+    c.setopt(c.WRITEDATA, buffer)
+    c.perform()
+    c.close()
 
     filename = 'data/' + str(parliment) + '_' + str(session) + '_' + str(vote_num) + '.xml'
-    # os.makedirs(os.path.dirname(filename), exist_ok=True)
-    # with open(filename, 'w') as my_data_file:
-    #     my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'w') as my_data_file:
+        my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
 
     root = ET.parse(filename).getroot()
     votes = []
@@ -55,7 +55,6 @@ def getVote(parliment, session, vote_num):
         if vote_res == "Agreed To":
             vote.DecisionAgreedTo = True
         votes.append(vote)
-    print('t')
 
 
 def main():
