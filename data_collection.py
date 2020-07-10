@@ -32,7 +32,7 @@ def getVote(parliment, session, vote_num):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as my_data_file:
         my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
-    parseXML(filename)
+    return parseXML(filename)
 
 
 def parseXML(filename):
@@ -58,10 +58,23 @@ def parseXML(filename):
         if vote_res == "Agreed To":
             vote.DecisionAgreedTo = True
         votes.append(vote)
+    return votes
+
+
+def breakdownByParty(votes):
+    dict = {}
+    for vote in votes:
+        if vote.Party not in dict:
+            dict[vote.Party] = 0
+        dict[vote.Party] += 1
+    print(dict)
+
 
 
 def main():
-    getVote(41, 2, 300)
+    votes = getVote(41, 2, 300)
+    breakdownByParty(votes)
+
 
 if __name__ == "__main__":
     main()
