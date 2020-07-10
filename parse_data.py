@@ -45,10 +45,23 @@ def breakdownByParty(votes):
         if vote.Party not in dict:
             dict[vote.Party] = 0
         dict[vote.Party] += 1
+    print("Breakdown by Party")
     print(dict)
 
+def breakdownByResult(votes):
+    res = [0, 0]
+    for vote in votes:
+        if vote.IsVoteYea:
+            res[0] += 1
+        else:
+            res[1] += 1
+    print("Breakdown by Party [Yea, Nay]")
+    print(res)
+
 def main():
-    votes = parseXML(41, 2, 300)
+    votes = parseXML(41, 2, 467)
+    breakdownByParty(votes)
+    breakdownByResult(votes)
 
 if __name__ == "__main__":
     main()
