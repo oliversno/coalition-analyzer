@@ -43,25 +43,38 @@ def breakdownByParty(votes):
     dict = {}
     for vote in votes:
         if vote.Party not in dict:
-            dict[vote.Party] = 0
-        dict[vote.Party] += 1
-    print("Breakdown by Party")
-    print(dict)
+            dict[vote.Party] = []
+        dict[vote.Party].append(vote)
+    return dict
 
 def breakdownByResult(votes):
-    res = [0, 0]
+    res = {}
+    res["Yea"] = []
+    res["Nay"] = []
     for vote in votes:
         if vote.IsVoteYea:
-            res[0] += 1
+            res["Yea"].append(vote)
         else:
-            res[1] += 1
-    print("Breakdown by Party [Yea, Nay]")
-    print(res)
+            res["Nay"].append(vote)
+    return res
 
 def main():
     votes = parseXML(41, 2, 467)
-    breakdownByParty(votes)
-    breakdownByResult(votes)
+    print("Breakdown by Party")
+    parties = breakdownByParty(votes)
+    print(len(parties))
+    print("Breakdown by Result [Yea, Nay]")
+    YeaNay = breakdownByResult(votes)
+    print(len(YeaNay["Yea"]), len(YeaNay["Nay"]))
+    print("Breakdown by Party - Yea")
+    print(breakdownByParty(YeaNay["Yea"]))
+    print("Breakdown by Party - Nay")
+    print(breakdownByParty(YeaNay["Nay"]))
+    for party in parties:
+        print("Party:", party)
+        print("Breakdown by Result [Yea, Nay]")
+        res = breakdownByResult(parties[party])
+        print(len(res["Yea"]), len(res["Nay"]))
 
 if __name__ == "__main__":
     main()
