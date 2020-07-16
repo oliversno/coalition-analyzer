@@ -10,7 +10,6 @@ class Vote():
         self.ProvinceTerritory = ""
         self.IsVoteYea = False
         self.IsVoteNay = False
-        self.IsVotePaired = False
         self.DecisionAgreedTo = False
 
 def parseXML(parliment, session, vote_num):
@@ -30,9 +29,6 @@ def parseXML(parliment, session, vote_num):
         vote_res = child.find("IsVoteNay").text
         if vote_res == "true":
             vote.IsVoteNay = True
-        vote_res = child.find("IsVotePaired").text
-        if vote_res == "true":
-            vote.IsVotePaired = True
         vote_res = child.find("DecisionResultName").text
         if vote_res == "Agreed To":
             vote.DecisionAgreedTo = True
