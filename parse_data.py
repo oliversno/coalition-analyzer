@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import xml.etree.ElementTree as ET
 import pandas as pd
+from scipy.stats import chi2_contingency
 
 class Vote():
     def __init__(self):
@@ -58,11 +59,27 @@ def breakdownByResult(votes):
 def main():
     votes = parseXML(41, 2, 467)
     parties = breakdownByParty(votes)
-    df = pd.DataFrame({}, index=["Yay", "Nay"])
+    df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
     for party in parties:
         res = breakdownByResult(parties[party])
-        df[party] = [len(res["Yea"]), len(res["Nay"])]
-    print(df)
+        df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
+    print(df_raw_counts)
+    chi, pval, dof, exp = chi2_contingency(df_raw_counts)
+    print("Chi^2=", chi, "p=", pval, "dof=", dof)
+    df_expected_counts = pd.DataFrame(
+        data=exp,
+        index=df_raw_counts.index,
+        columns=df_raw_counts.columns)
+    print(df_expected_counts)
+    
+    significance = 0.05
+    print('p-value=%.6f, significance=%.2f\n' % (pval, significance))
+    if pval < significance:
+        print("""At %.2f level of significance, we reject the null hypotheses and accept H1. 
+            They are not independent.""" % (significance))
+    else:
+        print("""At %.2f level of significance, we accept the null hypotheses. 
+            They are independent.""" % (significance))
 
 if __name__ == "__main__":
     main()
