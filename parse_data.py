@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import xml.etree.ElementTree as ET
+import pandas as pd
 
 class Vote():
     def __init__(self):
@@ -56,21 +57,12 @@ def breakdownByResult(votes):
 
 def main():
     votes = parseXML(41, 2, 467)
-    print("Breakdown by Party")
     parties = breakdownByParty(votes)
-    print(len(parties))
-    print("Breakdown by Result [Yea, Nay]")
-    YeaNay = breakdownByResult(votes)
-    print(len(YeaNay["Yea"]), len(YeaNay["Nay"]))
-    print("Breakdown by Party - Yea")
-    print(breakdownByParty(YeaNay["Yea"]))
-    print("Breakdown by Party - Nay")
-    print(breakdownByParty(YeaNay["Nay"]))
+    df = pd.DataFrame({}, index=["Yay", "Nay"])
     for party in parties:
-        print("Party:", party)
-        print("Breakdown by Result [Yea, Nay]")
         res = breakdownByResult(parties[party])
-        print(len(res["Yea"]), len(res["Nay"]))
+        df[party] = [len(res["Yea"]), len(res["Nay"])]
+    print(df)
 
 if __name__ == "__main__":
     main()
