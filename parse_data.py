@@ -60,26 +60,27 @@ def main():
     votes = parseXML(41, 2, 467)
     parties = breakdownByParty(votes)
     df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
+    df_percentage = pd.DataFrame({}, index=["Yay"])
     for party in parties:
         res = breakdownByResult(parties[party])
         df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
+        total = len(res["Yea"]) + len(res["Nay"])
+        df_percentage[party] = len(res["Yea"])/total
     print(df_raw_counts)
     chi, pval, dof, exp = chi2_contingency(df_raw_counts)
     print("Chi^2=", chi, "p=", pval, "dof=", dof)
-    df_expected_counts = pd.DataFrame(
-        data=exp,
-        index=df_raw_counts.index,
-        columns=df_raw_counts.columns)
-    print(df_expected_counts)
-    
+
     significance = 0.05
     print('p-value=%.6f, significance=%.2f\n' % (pval, significance))
     if pval < significance:
-        print("""At %.2f level of significance, we reject the null hypotheses and accept H1. 
-            They are not independent.""" % (significance))
+        print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
+        print("""They are not independent.""")
     else:
-        print("""At %.2f level of significance, we accept the null hypotheses. 
-            They are independent.""" % (significance))
+        print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
+        print("""They are independent.""")
+
+    # Group by Yes and No
+    print(df_percentage)
 
 if __name__ == "__main__":
     main()
