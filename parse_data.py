@@ -2,6 +2,7 @@
 import xml.etree.ElementTree as ET
 import pandas as pd
 from scipy.stats import chi2_contingency
+import matplotlib.pyplot as plt
 
 class Vote():
     def __init__(self):
@@ -60,12 +61,12 @@ def main():
     votes = parseXML(41, 2, 467)
     parties = breakdownByParty(votes)
     df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
-    df_percentage = pd.DataFrame({}, index=["Yay"])
+    df_percentage = pd.DataFrame({}, index=["Yay", "Nay"])
     for party in parties:
         res = breakdownByResult(parties[party])
         df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
         total = len(res["Yea"]) + len(res["Nay"])
-        df_percentage[party] = len(res["Yea"])/total
+        df_percentage[party] = [len(res["Yea"])/total, len(res["Nay"])/total]
     print(df_raw_counts)
     chi, pval, dof, exp = chi2_contingency(df_raw_counts)
     print("Chi^2=", chi, "p=", pval, "dof=", dof)
@@ -80,7 +81,10 @@ def main():
         print("""They are independent.""")
 
     # Group by Yes and No
-    print(df_percentage)
+    #print(df_percentage)
+    df = df_percentage.T
+    df.plot(x=0, y=1, kind="scatter")
+    plt.show()
 
 if __name__ == "__main__":
     main()
