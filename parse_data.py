@@ -61,12 +61,12 @@ def main():
     votes = parseXML(41, 2, 467)
     parties = breakdownByParty(votes)
     df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
-    df_percentage = pd.DataFrame({}, index=["Yay", "Nay"])
+    percentage = {}
     for party in parties:
         res = breakdownByResult(parties[party])
         df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
         total = len(res["Yea"]) + len(res["Nay"])
-        df_percentage[party] = [len(res["Yea"])/total, len(res["Nay"])/total]
+        percentage[party] = len(res["Yea"])/total
     print(df_raw_counts)
     chi, pval, dof, exp = chi2_contingency(df_raw_counts)
     print("Chi^2=", chi, "p=", pval, "dof=", dof)
@@ -82,9 +82,19 @@ def main():
 
     # Group by Yes and No
     #print(df_percentage)
-    df = df_percentage.T
-    df.plot(x=0, y=1, kind="scatter")
-    plt.show()
+    group1 = []
+    group2 = []
+    for party in parties:
+        percent = percentage[party]
+        print(percent)
+        if percent <= 0.2:
+            group1.append(party)
+        elif percent >= 0.8:
+            group2.append(party)
+    print("1:", group1)
+    print("2:", group2)
+
+
 
 if __name__ == "__main__":
     main()
