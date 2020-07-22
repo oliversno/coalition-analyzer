@@ -85,6 +85,8 @@ def main():
     group1 = []
     group2 = []
     for party in parties:
+        if party == "Independent":
+            continue
         percent = percentage[party]
         print(percent)
         if percent <= 0.2:
