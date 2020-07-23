@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import pycurl
 from io import BytesIO
+import sys
 import os
 
 
@@ -19,10 +20,18 @@ def getVote(parliment, session, vote_num):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as my_data_file:
         my_data_file.write(buffer.getvalue().decode('iso-8859-1'))
+    return True
 
 
 def main():
-    getVote(41, 2, 300)
+    if len(sys.argv) != 3:
+        print("Please Input Parliment# and Session#")
+        return
+    parliment = sys.argv[1]
+    session = sys.argv[2]
+    vote = 1
+    while getVote(parliment, session, vote):
+        vote += 1
 
 if __name__ == "__main__":
     main()

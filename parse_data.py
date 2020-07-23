@@ -58,7 +58,7 @@ def breakdownByResult(votes):
     return res
 
 def main():
-    votes = parseXML(41, 2, 467)
+    votes = parseXML(43, 1, 22)
     parties = breakdownByParty(votes)
     df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
     percentage = {}
@@ -79,6 +79,7 @@ def main():
     else:
         print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
         print("""They are independent.""")
+        return
 
     # Group by Yes and No
     #print(df_percentage)
