@@ -92,26 +92,25 @@ def main():
             if pval < significance:
                 print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
                 print("""They are not independent.""")
+                # Group by Yes and No
+                #print(df_percentage)
+                group1 = []
+                group2 = []
+                for party in parties:
+                    if party == "Independent":
+                        continue
+                    percent = percentage[party]
+                    print(percent)
+                    if percent <= 0.2:
+                        group1.append(party)
+                    elif percent >= 0.8:
+                        group2.append(party)
+                print("1:", group1)
+                print("2:", group2)
             else:
                 print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
                 print("""They are independent.""")
-                return
 
-            # Group by Yes and No
-            #print(df_percentage)
-            group1 = []
-            group2 = []
-            for party in parties:
-                if party == "Independent":
-                    continue
-                percent = percentage[party]
-                print(percent)
-                if percent <= 0.2:
-                    group1.append(party)
-                elif percent >= 0.8:
-                    group2.append(party)
-            print("1:", group1)
-            print("2:", group2)
         finally:
             vote += 1
             votes = parseXML(parliment, session, vote)
