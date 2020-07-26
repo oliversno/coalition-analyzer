@@ -18,6 +18,7 @@ class Vote():
         self.DecisionAgreedTo = False
 
 def parseXML(parliment, session, vote_num):
+    print("VOTE:", parliment, session, vote_num)
     filename = 'data/' + str(parliment) + '_' + str(session) + '_' + str(vote_num) + '.xml'
     if not os.path.isfile(filename): # if file does not exist
         return None
@@ -79,36 +80,41 @@ def main():
             total = len(res["Yea"]) + len(res["Nay"])
             percentage[party] = len(res["Yea"])/total
         print(df_raw_counts)
-        chi, pval, dof, exp = chi2_contingency(df_raw_counts)
-        print("Chi^2=", chi, "p=", pval, "dof=", dof)
-
-        significance = 0.05
-        print('p-value=%.6f, significance=%.2f\n' % (pval, significance))
-        if pval < significance:
-            print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
-            print("""They are not independent.""")
+        try:
+            chi, pval, dof, exp = chi2_contingency(df_raw_counts)
+        except:
+            print("Consensus on Vote, can't detect coalitions")
         else:
-            print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
-            print("""They are independent.""")
-            return
+            print("Chi^2=", chi, "p=", pval, "dof=", dof)
 
-        # Group by Yes and No
-        #print(df_percentage)
-        group1 = []
-        group2 = []
-        for party in parties:
-            if party == "Independent":
-                continue
-            percent = percentage[party]
-            print(percent)
-            if percent <= 0.2:
-                group1.append(party)
-            elif percent >= 0.8:
-                group2.append(party)
-        print("1:", group1)
-        print("2:", group2)
-        vote += 1
-        votes = parseXML(parliment, session, vote)
+            significance = 0.05
+            print('p-value=%.6f, significance=%.2f\n' % (pval, significance))
+            if pval < significance:
+                print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
+                print("""They are not independent.""")
+            else:
+                print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
+                print("""They are independent.""")
+                return
+
+            # Group by Yes and No
+            #print(df_percentage)
+            group1 = []
+            group2 = []
+            for party in parties:
+                if party == "Independent":
+                    continue
+                percent = percentage[party]
+                print(percent)
+                if percent <= 0.2:
+                    group1.append(party)
+                elif percent >= 0.8:
+                    group2.append(party)
+            print("1:", group1)
+            print("2:", group2)
+        finally:
+            vote += 1
+            votes = parseXML(parliment, session, vote)
 
 
 
