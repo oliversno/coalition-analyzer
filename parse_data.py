@@ -79,7 +79,7 @@ def main():
             df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
             total = len(res["Yea"]) + len(res["Nay"])
             percentage[party] = len(res["Yea"])/total
-        print(df_raw_counts)
+            
         try:
             chi, pval, dof, exp = chi2_contingency(df_raw_counts)
         except:
@@ -93,14 +93,12 @@ def main():
                 print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
                 print("""They are not independent.""")
                 # Group by Yes and No
-                #print(df_percentage)
                 group1 = []
                 group2 = []
                 for party in parties:
                     if party == "Independent":
                         continue
                     percent = percentage[party]
-                    print(percent)
                     if percent <= 0.2:
                         group1.append(party)
                     elif percent >= 0.8:
