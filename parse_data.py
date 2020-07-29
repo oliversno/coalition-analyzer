@@ -79,7 +79,7 @@ def main():
             df_raw_counts[party] = [len(res["Yea"]), len(res["Nay"])]
             total = len(res["Yea"]) + len(res["Nay"])
             percentage[party] = len(res["Yea"])/total
-            
+
         try:
             chi, pval, dof, exp = chi2_contingency(df_raw_counts)
         except:
@@ -92,19 +92,34 @@ def main():
             if pval < significance:
                 print("""At %.2f level of significance, we reject the null hypotheses and accept H1."""% (significance)) 
                 print("""They are not independent.""")
-                # Group by Yes and No
-                group1 = []
-                group2 = []
+                partyGroups = {}
                 for party in parties:
                     if party == "Independent":
                         continue
                     percent = percentage[party]
                     if percent <= 0.2:
-                        group1.append(party)
+                        partyGroups[party] = 1
                     elif percent >= 0.8:
-                        group2.append(party)
-                print("1:", group1)
-                print("2:", group2)
+                        partyGroups[party] = 2
+                groupLiberal = partyGroups["Liberal"]
+                groupConservative = partyGroups["Conservative"]
+                for party in parties:
+                    if party is "Liberal" or party is "Conservative" or party is "Independent":
+                        continue
+                    groupParty = partyGroups[party]
+                    # 4 options, vote with liberal but not conservative
+                    if groupParty == groupLiberal and not groupParty == groupConservative:
+                        print(party, "is Liberal but not Conservative")
+                    # vote with conservative but not liberal
+                    elif groupParty == groupConservative and not groupParty == groupLiberal:
+                        print(party, "is Conservative but not Liberal")
+                    # vote with both
+                    elif groupParty == groupLiberal and groupParty == groupConservative:
+                        print(party, "is both")
+                    # vote with neither
+                    elif not groupParty == groupLiberal and not groupParty == groupConservative:
+                        print(party, "is neither")
+
             else:
                 print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
                 print("""They are independent.""")
