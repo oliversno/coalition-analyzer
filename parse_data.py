@@ -103,8 +103,12 @@ def main():
                         partyGroups[party] = 2
                 groupLiberal = partyGroups["Liberal"]
                 groupConservative = partyGroups["Conservative"]
+                print("Party Groups", partyGroups)
                 for party in parties:
-                    if party is "Liberal" or party is "Conservative" or party is "Independent":
+                    if party == "Liberal" or party == "Conservative" or party == "Independent":
+                        continue
+                    if party not in partyGroups:
+                        print(party, "is split")
                         continue
                     groupParty = partyGroups[party]
                     # 4 options, vote with liberal but not conservative
