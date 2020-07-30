@@ -2,6 +2,7 @@
 import sys
 import os
 import xml.etree.ElementTree as ET
+from collections import Counter
 import pandas as pd
 from scipy.stats import chi2_contingency
 import matplotlib.pyplot as plt
@@ -139,6 +140,13 @@ def main():
             vote += 1
             votes = parseXML(parliment, session, vote)
     print(finalRes)
+    for party in finalRes:
+        counts = Counter(finalRes[party])
+        length = len(finalRes[party])
+        print(party, "Voted Liberal", (counts['L']/length)*100, "% of the time")
+        print(party, "Voted Conservative", (counts['C']/length)*100, "% of the time")
+        print(party, "Voted Both", (counts['B']/length)*100, "% of the time")
+        print(party, "Voted Neither", (counts['N']/length)*100, "% of the time")
 
 
 
