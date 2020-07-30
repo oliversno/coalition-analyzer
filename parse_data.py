@@ -70,6 +70,7 @@ def main():
     session = sys.argv[2]
     vote = 1
     votes = parseXML(parliment, session, vote)
+    finalRes = {}
     while votes is not None:
         parties = breakdownByParty(votes)
         df_raw_counts = pd.DataFrame({}, index=["Yay", "Nay"])
@@ -111,18 +112,24 @@ def main():
                         print(party, "is split")
                         continue
                     groupParty = partyGroups[party]
+                    if party not in finalRes:
+                        finalRes[party] = []
                     # 4 options, vote with liberal but not conservative
                     if groupParty == groupLiberal and not groupParty == groupConservative:
                         print(party, "is Liberal but not Conservative")
+                        finalRes[party].append('L')
                     # vote with conservative but not liberal
                     elif groupParty == groupConservative and not groupParty == groupLiberal:
                         print(party, "is Conservative but not Liberal")
+                        finalRes[party].append('C')
                     # vote with both
                     elif groupParty == groupLiberal and groupParty == groupConservative:
                         print(party, "is both")
+                        finalRes[party].append('B')
                     # vote with neither
                     elif not groupParty == groupLiberal and not groupParty == groupConservative:
                         print(party, "is neither")
+                        finalRes[party].append('N')
 
             else:
                 print("""At %.2f level of significance, we accept the null hypotheses."""% (significance))
@@ -131,6 +138,7 @@ def main():
         finally:
             vote += 1
             votes = parseXML(parliment, session, vote)
+    print(finalRes)
 
 
 
